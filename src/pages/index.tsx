@@ -1,75 +1,63 @@
+import data from '../../data.json';
 import Head from 'next/head';
 import Image from 'next/image';
-
+import Link from 'next/link';
 import styles from '@/styles/Home.module.css';
 
 export default function Home() {
+  // Pull out icons and construct links for footer
+  const links = data.links.map(({ alt, icon, link }) => {
+    const path = `https://unpkg.com/simple-icons@v6/icons/` + icon + `.svg`;
+    console.log(path);
+    return (
+      <a href={link} target="_blank" rel="noopener noreferrer" key={icon}>
+        <img height="64" width="64" src={path} alt={alt} />
+      </a>
+    );
+  });
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>TypeScript starter for Next.js</title>
+        <title>Max Revays Homepage</title>
         <meta
-          name="description"
-          content="TypeScript starter for Next.js that includes all you need to build amazing apps"
+          name="Homepage"
+          content="A landing page containing various links to my online profiles."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+      <header className={styles.header}>
+        {
+          <>
+            <Image
+              priority
+              src={data.profile}
+              className={styles.borderCircle}
+              height={200}
+              width={200}
+              alt={`profile_picture`}
+            />
+            <h1 className={styles.heading2Xl}>{`Max Revay`}</h1>
+          </>
+        }
+      </header>
 
-        <p className={styles.description}>
-          Get started by editing{` `}
-          <code className={styles.code}>pages/index.tsx</code>
+      <div className={styles.description}>
+        <p>
+          {data.bio}
+          Check out my thesis:{` `}
+          <Link href="https://cloudstor.aarnet.edu.au/plus/s/ZIA177r81gKr2M3">
+            <a>A Behavioral Approach to Robust Machine Learning.</a>
+          </Link>
         </p>
 
-        <p className={styles.description}>This is not an official starter!</p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=typescript-nextjs-starter"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=typescript-nextjs-starter"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{` `}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+        <p>
+          I am currently working as a research associate at the University of
+          New South Wales on time series clustering.
+        </p>
+        <footer className={styles.footer}>{links}</footer>
+      </div>
     </div>
   );
 }

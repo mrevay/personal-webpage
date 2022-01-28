@@ -1,0 +1,28 @@
+{
+    "name": "Max Revay",
+    "bio": "Hi, I'm Max! I'm a research engineer and mathematician working in machine learning, control theory and numerical optimization. I've just finished my Ph.D, at the university of Sydney with Prof. Ian Manchester.",
+    "profile":"/images/profile_square.jpg",
+    "email": "maxrevay@gmail.com",
+    "links": [
+        {
+            "alt": "Google Scholar",
+            "icon": "googlescholar",
+            "link": "https://scholar.google.com/citations?user=zwHd_DYAAAAJ&hl=en"
+        },
+        {
+            "alt": "Github",
+            "icon": "github",
+            "link": "https://github.com/mrevay"
+        },
+        {
+            "alt": "Linked In",
+            "icon": "linkedin",
+            "link": "https://au.linkedin.com/in/maxrevay"
+        },
+        {
+            "alt": "G-Mail",
+            "icon": "gmail",
+            "link": "maxrevay@gmail.com"
+        }
+    ]
+}

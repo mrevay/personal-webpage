@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-import * as math from 'mathjs';
+import * as MathJS from 'mathjs';
 
 export default function Background() {
   const canvasRef = useRef();
@@ -26,27 +26,7 @@ export default function Background() {
 
     var drone;
 
-    // state: x, y, z, dx, dy, dz, roll, pitch, droll, dpitch
-    const dynamics = {
-      A: math.matrix([
-        [0, 1, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 1],
-        [0, 0, 0, 0],
-      ]),
-      B: math.matrix([
-        [0, 0],
-        [1, 0],
-        [0, 0],
-        [0, 1],
-      ]),
-      K: math.matrix([
-        [4.47214, 5.37999, 0.0, 0.0],
-        [0.0, 0.0, 4.47214, 5.37999],
-      ]),
-    };
-
-    var state = math.matrix(math.zeros(4, 1));
+    var state = MathJS.matrix(MathJS.zeros(6, 1));
 
     // MISC
     var mousePos = { x: 0, y: 0 };
@@ -140,30 +120,70 @@ export default function Background() {
       }
     }
 
+    function dynamics(x, u) {
+      const m = 0.7;
+      const L = 0.2;
+      const I = (m * L * L) / 12; //moment of inertia
+      const g = 9.81;
+
+      const A = MathJS.matrix([
+        [0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 1],
+        [0, 0, g, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+      ]);
+      const B = MathJS.matrix([
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [1 / m, 1 / m],
+        [1 / I, -1 / I],
+      ]);
+
+      return MathJS.add(MathJS.multiply(A, x), MathJS.multiply(B, u));
+    }
+
+    function controller(x, xstar) {
+      const K = [
+        [2.23607, 2.23607, 2.08685, 0.977927, 1.2531, 0.0993444],
+        [-2.23607, 2.23607, -2.08685, -0.977927, 1.2531, -0.0993444],
+      ];
+
+      const error = MathJS.subtract(xstar, x);
+      return MathJS.multiply(K, error);
+    }
+
+    function euler_step(x, xdot, dt) {
+      return MathJS.add(x, MathJS.multiply(xdot, dt));
+    }
+
     function loop() {
       var ang = (fieldOfView * Math.PI) / 180;
 
       // color update depending on the speed
       // Project mouse position into drones plane
-      const alpha_x = (camera.position.z / WIDTH) * math.tan(ang);
-      const alpha_y = (camera.position.z / HEIGHT) * math.tan(ang);
+      const alpha_x = (camera.position.z / WIDTH) * MathJS.tan(ang);
+      const alpha_y = (camera.position.z / HEIGHT) * MathJS.tan(ang);
 
       var setpointx = (mousePos.x - WIDTH / 2) * alpha_x;
       var setpointy = (HEIGHT / 2 - mousePos.y) * alpha_y;
 
-      var setpoint = math.matrix([[setpointx], [0], [setpointy], [0]]);
+      var xstar = MathJS.matrix([[setpointx], [setpointy], [0], [0], [0], [0]]);
 
-      var error = math.subtract(state, setpoint);
-      var BKe = math.multiply(dynamics.B, dynamics.K, error);
-      var Ax = math.multiply(dynamics.A, state);
-      let dx = math.subtract(Ax, BKe).clone();
+      const u = controller(state, xstar);
+      const xdot = dynamics(state, u);
 
       // Calculate elapsed time
-      let delta = clock.getDelta();
-      state = math.add(state, math.multiply(dx, delta));
+      const delta = clock.getDelta();
+      state = euler_step(state, xdot, delta);
 
+      console.log(state.get([0, 0]));
       drone.position.x = state.get([0, 0]);
-      drone.position.y = state.get([2, 0]);
+      drone.position.y = state.get([1, 0]);
+      drone.rotation.z = (-1 * state.get([2, 0]) * Math.PI) / 180;
 
       renderer.render(scene, camera);
       requestAnimationFrame(loop);

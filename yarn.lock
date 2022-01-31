@@ -3011,11 +3011,6 @@ natural-compare@^1.4.0:
   resolved "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-nblas@^2.1.9:
-  version "2.1.9"
-  resolved "https://registry.yarnpkg.com/nblas/-/nblas-2.1.9.tgz#5cbdd948b8bef5b0a3ff4cc6c2b081145853b48e"
-  integrity sha512-nMMTKm+ETAT2fYbR54Y3v448iu9akEA2wDRM0mQL8bvjBHBL2zRu3Ww68k0/OLwWb5uQG9ovRNunV1UUjZEREw==
-
 next@12.0.8:
   version "12.0.8"
   resolved "https://registry.npmjs.org/next/-/next-12.0.8.tgz"
@@ -3044,11 +3039,6 @@ next@12.0.8:
     "@next/swc-win32-arm64-msvc" "12.0.8"
     "@next/swc-win32-ia32-msvc" "12.0.8"
     "@next/swc-win32-x64-msvc" "12.0.8"
-
-nlapack@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/nlapack/-/nlapack-2.0.4.tgz#ab04cdafc32edb98a3d28864f231f5bc78a1515f"
-  integrity sha512-wOSREY+1LoAQCJkOR+d4xNFXYZEPaXH8iLxbAHCFj/+ynMtNGfWOihMzTEo6rL+fzVIWcoU00zFxNB34+8BXSw==
 
 node-fetch@2.6.1:
   version "2.6.1"
@@ -4161,14 +4151,6 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
-
-vectorious@6.1.1:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/vectorious/-/vectorious-6.1.1.tgz#ebd78fae90b54712eadbfdf695ae66d733e516a9"
-  integrity sha512-8BtnzFUmNpXgzisVAfbkWaB7q16U+f2WACtnyBVO5lhPG/2O97Cmi3xVLQLskDjvwsUiqALDGwvRSQB+dwipsA==
-  optionalDependencies:
-    nblas "^2.1.9"
-    nlapack "^2.0.4"
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"

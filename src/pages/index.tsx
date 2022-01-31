@@ -1,8 +1,10 @@
-import data from '../../data.json';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import Background from '@/components/background';
 import styles from '@/styles/Home.module.css';
+import data from '../../data.json';
 
 export default function Home() {
   // Pull out icons and construct links for footer
@@ -19,13 +21,15 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Max Revays Homepage</title>
+        <title>Max Revay&apos;s Homepage</title>
         <meta
           name="Homepage"
           content="A landing page containing various links to my online profiles."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Background />
 
       <header className={styles.header}>
         {
@@ -38,23 +42,23 @@ export default function Home() {
               width={200}
               alt={`profile_picture`}
             />
-            <h1 className={styles.heading2Xl}>{`Max Revay`}</h1>
           </>
         }
       </header>
+      <h1 className={styles.title}> Hi, I&apos; m Max! </h1>
 
       <div className={styles.description}>
         <p>
-          {data.bio}
-          Check out my thesis:{` `}
+          I&apos;m a research engineer and mathematician working in machine
+          learning, control theory and numerical optimization. I&apos;ve just
+          finished my Ph.D, at the university of Sydney with Prof. Ian
+          Manchester. Check out my thesis:{` `}
           <Link href="https://cloudstor.aarnet.edu.au/plus/s/ZIA177r81gKr2M3">
             <a>A Behavioral Approach to Robust Machine Learning.</a>
           </Link>
-        </p>
-
-        <p>
-          I am currently working as a research associate at the University of
-          New South Wales on time series clustering.
+          <br />
+          <br />I am currently working as a research associate at the University
+          of New South Wales on time series clustering.
         </p>
         <footer className={styles.footer}>{links}</footer>
       </div>

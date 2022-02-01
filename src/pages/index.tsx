@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Background from '@/components/background';
 import styles from '@/styles/Home.module.css';
 import data from '../../data.json';
+import { GitHub } from '@mui/icons-material';
 
 export default function Home() {
   // Pull out icons and construct links for footer
@@ -30,8 +31,7 @@ export default function Home() {
       </Head>
 
       <Background />
-
-      <header className={styles.header}>
+      {/* <header className={styles.header}>
         {
           <>
             <Image
@@ -44,8 +44,8 @@ export default function Home() {
             />
           </>
         }
-      </header>
-      <h1 className={styles.title}> Hi, I&apos; m Max! </h1>
+      </header> */}
+      <h1 className={styles.title}> Hi, I&apos;m Max! </h1>
 
       <div className={styles.description}>
         <p>
@@ -60,7 +60,33 @@ export default function Home() {
           <br />I am currently working as a research associate at the University
           of New South Wales on time series clustering.
         </p>
-        <footer className={styles.footer}>{links}</footer>
+        {/* <footer className={styles.footer}>{links}</footer> */}
+        <footer>
+          <Image
+            src="/images/scholar96.png"
+            width="64"
+            height="64"
+            alt="Google Scholar"
+          ></Image>
+          <Image
+            src="/images/github.png"
+            width="64"
+            height="64"
+            alt="GitHub"
+          ></Image>
+          <Image
+            src="/images/linked-in.png"
+            width="64"
+            height="64"
+            alt="Google Scholar"
+          ></Image>
+          <Image
+            src="/images/gmail.png"
+            width="64"
+            height="64"
+            alt="Google Scholar"
+          ></Image>
+        </footer>
       </div>
     </div>
   );

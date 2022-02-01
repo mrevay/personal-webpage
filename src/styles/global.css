@@ -9,13 +9,13 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Overpass Mono', monospace;  background: linear-gradient(#000000, #a6d0e4);
+  font-family: 'Overpass Mono', monospace;  background: linear-gradient(#dd8a0c, #ffe8ac);
   overflow-x: hidden;
   color: white;
 }
 
 a {
-  color: #1253cc;;
+  color: #4480f0;;
   text-decoration: none;
 }
 

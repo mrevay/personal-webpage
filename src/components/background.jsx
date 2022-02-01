@@ -27,6 +27,7 @@ export default function Background() {
     var drone;
 
     var state = MathJS.matrix(MathJS.zeros(6, 1));
+    state[1] = -5;
 
     // MISC
     var mousePos = { x: 0, y: 0 };
@@ -42,7 +43,7 @@ export default function Background() {
       WIDTH = window.innerWidth;
       aspectRatio = WIDTH / HEIGHT;
 
-      fieldOfView = 60;
+      fieldOfView = 45;
       nearPlane = 1; // the camera won't "see" any object placed in front of this plane
       farPlane = 2000; // the camera wont't see any object placed further than this plane
       camera = new THREE.PerspectiveCamera(
@@ -51,15 +52,22 @@ export default function Background() {
         nearPlane,
         farPlane,
       );
-      camera.position.z = 50;
+      camera.position.z = 100;
+      camera.lookAt(0, 0, 0);
+
+      const f = camera.getFocalLength();
+      console.log(f);
 
       //create the renderer
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(WIDTH, HEIGHT);
+      // renderer.shadowMap.enabled = true;
+      // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
       canvasRef.current.appendChild(renderer.domElement);
 
       // convert the field of view to radians
-      var ang = ((fieldOfView / 2) * Math.PI) / 180;
+      var ang = (fieldOfView * Math.PI) / 180;
 
       //  y limit because fielOfView is a vertical field of view.
       // I then calculate the x Limit
@@ -69,12 +77,15 @@ export default function Background() {
       windowHalfX = WIDTH / 2;
       windowHalfY = HEIGHT / 2;
 
+      mousePos = { x: windowHalfX, y: HEIGHT / 2 };
+
       // Create a clock to help simulate
       clock = new THREE.Clock();
 
       // handling resize and mouse move events
       window.addEventListener('resize', onWindowResize, false);
       document.addEventListener('mousemove', handleMouseMove, false);
+
       // let's make it work on mobile too
       document.addEventListener('touchstart', handleTouchStart, false);
       document.addEventListener('touchend', handleTouchEnd, false);
@@ -147,6 +158,7 @@ export default function Background() {
     }
 
     function controller(x, xstar) {
+      // gains calculated via separate Julia script
       const K = [
         [2.23607, 2.23607, 2.08685, 0.977927, 1.2531, 0.0993444],
         [-2.23607, 2.23607, -2.08685, -0.977927, 1.2531, -0.0993444],
@@ -165,8 +177,11 @@ export default function Background() {
 
       // color update depending on the speed
       // Project mouse position into drones plane
-      const alpha_x = (camera.position.z / WIDTH) * MathJS.tan(ang);
-      const alpha_y = (camera.position.z / HEIGHT) * MathJS.tan(ang);
+      const f = camera.getFocalLength();
+
+      // const alpha_x = camera.position.z / WIDTH / f;
+      const alpha_x = (4 * camera.position.z * MathJS.tan(ang / 2)) / WIDTH;
+      const alpha_y = (2 * camera.position.z * MathJS.tan(ang / 2)) / HEIGHT;
 
       var setpointx = (mousePos.x - WIDTH / 2) * alpha_x;
       var setpointy = (HEIGHT / 2 - mousePos.y) * alpha_y;
@@ -180,10 +195,11 @@ export default function Background() {
       const delta = clock.getDelta();
       state = euler_step(state, xdot, delta);
 
-      console.log(state.get([0, 0]));
       drone.position.x = state.get([0, 0]);
       drone.position.y = state.get([1, 0]);
-      drone.rotation.z = (-1 * state.get([2, 0]) * Math.PI) / 180;
+
+      // overanimate roll for style
+      drone.rotation.z = (-1.1 * state.get([2, 0]) * Math.PI) / 180;
 
       renderer.render(scene, camera);
       requestAnimationFrame(loop);
@@ -193,15 +209,30 @@ export default function Background() {
     // I use 2 lights, an hemisphere to give a global ambient light
     // And a harder light to add some shadows
     function createLight() {
-      light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.8);
-      scene.add(light);
-      light.position.set(1, 2, 3);
+      light = new THREE.HemisphereLight(0xffffff, 0xffffff, 1.0);
+      light.position.set(0, 20, 20);
+      // scene.add(light);
       shadowLight = new THREE.DirectionalLight(0xffffff, 1.0);
-      shadowLight.position.set(20, 20, 20);
+      shadowLight.position.set(0, 20, 10);
       scene.add(shadowLight);
+
+      const ambient_light = new THREE.AmbientLight(0xffffff, 0.3); // soft white light
+      // scene.add(ambient_light);
     }
 
-    function createFish() {
+    function createRoom() {
+      const geometry = new THREE.PlaneGeometry(200, 200);
+      const material = new THREE.MeshBasicMaterial({
+        color: 0xdd8a0c,
+        side: THREE.DoubleSide,
+      });
+      const plane = new THREE.Mesh(geometry, material);
+      plane.position.set(0, -50, 0);
+      plane.rotation.set(Math.PI / 2, 0, 0);
+      scene.add(plane);
+    }
+
+    function createDrone() {
       drone = new THREE.Group();
 
       // Load the model
@@ -210,6 +241,7 @@ export default function Background() {
         './model/scene.gltf',
         (gltf) => {
           drone.add(gltf.scene);
+
           console.log(gltf.scene);
         },
         undefined,
@@ -232,7 +264,8 @@ export default function Background() {
 
     init();
     createLight();
-    createFish();
+    createDrone();
+    createRoom();
     loop();
     //   setInterval(flyParticle, 70); // launch a new particle every 70ms
   }, []);

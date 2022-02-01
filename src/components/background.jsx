@@ -29,7 +29,7 @@ export default function Background() {
     state[1] = -5; // initial state
     const base_prop_speed = 20;
     const prop_gain = 0.2;
-
+    const ylimit = -30;
     // MISC
     var mousePos = { x: 0, y: 0 };
 
@@ -54,7 +54,7 @@ export default function Background() {
         farPlane,
       );
       camera.position.z = 100;
-      camera.position.y = 20;
+      // camera.position.y = 20;
       camera.lookAt(0, 0, 0);
 
       //create the renderer
@@ -184,6 +184,7 @@ export default function Background() {
 
       var setpointx = (mousePos.x - WIDTH / 2) * alpha_x;
       var setpointy = (HEIGHT / 2 - mousePos.y) * alpha_y;
+      setpointy = setpointy >= ylimit ? setpointy : ylimit;
 
       var xstar = MathJS.matrix([[setpointx], [setpointy], [0], [0], [0], [0]]);
 

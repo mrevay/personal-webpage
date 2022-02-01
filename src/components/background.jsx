@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 import * as MathJS from 'mathjs';
+import { CatchingPokemonSharp } from '@mui/icons-material';
 
 export default function Background() {
   const canvasRef = useRef();
@@ -16,18 +17,18 @@ export default function Background() {
       aspectRatio,
       nearPlane,
       farPlane,
-      shadowLight,
       light,
       renderer,
-      clock;
+      clock,
+      drone;
 
     //SCREEN VARIABLES
     var HEIGHT, WIDTH, windowHalfX, windowHalfY, xLimit, yLimit;
 
-    var drone;
-
     var state = MathJS.matrix(MathJS.zeros(6, 1));
-    state[1] = -5;
+    state[1] = -5; // initial state
+    const base_prop_speed = 20;
+    const prop_gain = 0.2;
 
     // MISC
     var mousePos = { x: 0, y: 0 };
@@ -53,16 +54,14 @@ export default function Background() {
         farPlane,
       );
       camera.position.z = 100;
+      camera.position.y = 20;
       camera.lookAt(0, 0, 0);
-
-      const f = camera.getFocalLength();
-      console.log(f);
 
       //create the renderer
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(WIDTH, HEIGHT);
-      // renderer.shadowMap.enabled = true;
-      // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
       canvasRef.current.appendChild(renderer.domElement);
 
@@ -191,15 +190,27 @@ export default function Background() {
       const u = controller(state, xstar);
       const xdot = dynamics(state, u);
 
-      // Calculate elapsed time
+      // Euler step
       const delta = clock.getDelta();
       state = euler_step(state, xdot, delta);
 
+      try {
+        // animate the propellers
+        var ul = base_prop_speed + u.get([0, 0]) * prop_gain;
+        var ur = base_prop_speed + u.get([1, 0]) * prop_gain;
+
+        drone.children[0].children[6].rotation.z += delta * ul;
+        drone.children[0].children[7].rotation.z -= delta * ur;
+        drone.children[0].children[8].rotation.z += delta * ul;
+        drone.children[0].children[9].rotation.z -= delta * ur;
+      } catch (error) {
+        console.log(error);
+      }
+
+      // update animation
       drone.position.x = state.get([0, 0]);
       drone.position.y = state.get([1, 0]);
-
-      // overanimate roll for style
-      drone.rotation.z = (-1.1 * state.get([2, 0]) * Math.PI) / 180;
+      drone.rotation.z = (-1 * state.get([2, 0]) * Math.PI) / 180;
 
       renderer.render(scene, camera);
       requestAnimationFrame(loop);
@@ -209,26 +220,33 @@ export default function Background() {
     // I use 2 lights, an hemisphere to give a global ambient light
     // And a harder light to add some shadows
     function createLight() {
-      light = new THREE.HemisphereLight(0xffffff, 0xffffff, 1.0);
-      light.position.set(0, 20, 20);
-      // scene.add(light);
-      shadowLight = new THREE.DirectionalLight(0xffffff, 1.0);
-      shadowLight.position.set(0, 20, 10);
-      scene.add(shadowLight);
+      // light = new THREE.HemisphereLight(0xffffff, 0xffffff, 1.0);
+      // light.position.set(0, 20, 20);
+      // // scene.add(light);
+
+      // shadowLight = new THREE.DirectionalLight(0xffffff, 1.0);
+      // shadowLight.position.set(0, 20, 10);
+      // scene.add(shadowLight);
 
       const ambient_light = new THREE.AmbientLight(0xffffff, 0.3); // soft white light
-      // scene.add(ambient_light);
+      scene.add(ambient_light);
+
+      light = new THREE.PointLight(0xffffff, 1, 200);
+      light.position.set(0, 20, 4);
+      light.castShadow = true; // default false
+      scene.add(light);
     }
 
     function createRoom() {
-      const geometry = new THREE.PlaneGeometry(200, 200);
+      const geometry = new THREE.PlaneGeometry(200, 200, 32, 32);
       const material = new THREE.MeshBasicMaterial({
         color: 0xdd8a0c,
         side: THREE.DoubleSide,
       });
       const plane = new THREE.Mesh(geometry, material);
-      plane.position.set(0, -50, 0);
-      plane.rotation.set(Math.PI / 2, 0, 0);
+      plane.position.set(0, -20, 0);
+      plane.rotation.set(-Math.PI / 2, 0, 0);
+      plane.receiveShadow = true;
       scene.add(plane);
     }
 
@@ -240,9 +258,20 @@ export default function Background() {
       loader.load(
         './model/scene.gltf',
         (gltf) => {
-          drone.add(gltf.scene);
+          // extract animations
+          const mixer = new THREE.AnimationMixer(gltf.scene);
+          const clips = gltf.animations;
+          const action = mixer.clipAction(clips[0]);
+          action.play();
 
-          console.log(gltf.scene);
+          // extract drone asset from scene
+          var model = gltf.scenes[0].children[0].children[0].children[0];
+          model.children = model.children.slice(0, 12); // removes shadows
+          model.rotation.x = -Math.PI / 2;
+          model.castShadow = true;
+
+          // Add Mesh to scene
+          drone.add(model);
         },
         undefined,
         (error) => console.error(error),
@@ -265,7 +294,7 @@ export default function Background() {
     init();
     createLight();
     createDrone();
-    createRoom();
+    // createRoom();
     loop();
     //   setInterval(flyParticle, 70); // launch a new particle every 70ms
   }, []);

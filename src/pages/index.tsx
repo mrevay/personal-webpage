@@ -31,23 +31,9 @@ export default function Home() {
       </Head>
 
       <Background />
-      {/* <header className={styles.header}>
-        {
-          <>
-            <Image
-              priority
-              src={data.profile}
-              className={styles.borderCircle}
-              height={200}
-              width={200}
-              alt={`profile_picture`}
-            />
-          </>
-        }
-      </header> */}
-      <h1 className={styles.title}> Hi, I&apos;m Max! </h1>
 
       <div className={styles.description}>
+        <h1 className={styles.title}> Hi, I&apos;m Max! </h1>
         <p>
           I&apos;m a research engineer and mathematician working in machine
           learning, control theory and numerical optimization. I&apos;ve just
@@ -61,7 +47,13 @@ export default function Home() {
           of New South Wales on time series clustering.
         </p>
         {/* <footer className={styles.footer}>{links}</footer> */}
-        <footer>
+        You might want to check out some of these links:<br></br>
+        <ul>
+          <li>Thesis</li>
+          <li>Publications</li>
+          <li>Linked In</li>
+        </ul>
+        {/* <footer>
           <Image
             src="/images/scholar96.png"
             width="64"
@@ -86,7 +78,7 @@ export default function Home() {
             height="64"
             alt="Google Scholar"
           ></Image>
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

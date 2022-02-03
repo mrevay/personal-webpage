@@ -250,8 +250,8 @@ export default function Background() {
     }
 
     function loop() {
-      var setpointx = (mousePos.x - WIDTH / 2) / 20;
-      var setpointy = (mousePos.y - HEIGHT / 2) / 20;
+      var setpointx = ((mousePos.x - WIDTH / 2) * 100) / HEIGHT;
+      var setpointy = ((mousePos.y - HEIGHT / 2) * 100) / HEIGHT;
 
       var xstar = MathJS.matrix([
         [setpointx],
@@ -275,11 +275,6 @@ export default function Background() {
 
       try {
         // animate the propellers
-        // var u1 = base_prop_speed + u.get([0, 0]) * prop_gain;
-        // var u2 = base_prop_speed + u.get([1, 0]) * prop_gain;
-        // var u3 = base_prop_speed + u.get([2, 0]) * prop_gain;
-        // var u4 = base_prop_speed + u.get([3, 0]) * prop_gain;
-
         var u1 = sigmoid(u.get([0, 0]) * prop_range) * prop_gain;
         var u2 = sigmoid(u.get([1, 0]) * prop_range) * prop_gain;
         var u3 = sigmoid(u.get([2, 0]) * prop_range) * prop_gain;

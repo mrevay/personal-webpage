@@ -16,10 +16,18 @@ body {
 }
 
 a {
-  color: #4480f0;;
+  color: #f7B733;
   text-decoration: none;
 }
 
 * {
   box-sizing: border-box;
+}
+
+kbd {
+  padding: 5px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.2);
+  padding: 5px 10px;
+
 }

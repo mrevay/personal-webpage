@@ -79,6 +79,8 @@ export default function Background() {
 
         console.log(drone);
 
+        onWindowResize();
+
         loop();
       },
       undefined,
@@ -171,20 +173,16 @@ export default function Background() {
       if (event.touches.length > 1) {
         event.preventDefault();
         mousePos = { x: event.touches[0].pageX, y: event.touches[0].pageY };
-        updateSpeed();
       }
     }
 
     function handleTouchEnd(event) {
       mousePos = { x: windowHalfX, y: windowHalfY };
-      updateSpeed();
     }
 
     function handleTouchMove(event) {
       if (event.touches.length == 1) {
-        event.preventDefault();
         mousePos = { x: event.touches[0].pageX, y: event.touches[0].pageY };
-        updateSpeed();
       }
     }
 

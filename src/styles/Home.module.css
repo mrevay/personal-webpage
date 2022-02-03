@@ -22,6 +22,7 @@
   background-color: #fc4a1a;
   border-radius: 15px;
   box-shadow: 0 10px 20px #ff000040;
+  position: relative;
 }
 
 .title {
@@ -38,7 +39,7 @@
 .bottomLeft > div {
   padding: 10px 15px 10px 10px;
   border-radius: 15px;
-  margin: 10px 0;
+  margin-top: 15px;
   background-color: #fc4a1a;
   box-shadow: 0 10px 20px #ff000040;
 }
@@ -79,4 +80,42 @@
   transform: translateY(10px); 
   transition: 0.3s ease all;
   border-radius: 15px;
+}
+
+.expand {
+  position: absolute;
+  top: 35px;
+  right: 15px;
+  font-size: 10px;
+  display: none;
+}
+
+@media screen and (max-width: 992px) {
+  .topRight {
+    top: inherit;
+    bottom: 32px;
+  }
+
+  .popup {
+    top: inherit;
+    bottom: 90px;
+  }
+
+  .container {
+    max-height: 75px;
+    overflow: hidden;
+    transition: 0.3s ease all;
+  }
+
+  .container:hover {
+    max-height: 800px;
+  }
+
+  .bottomLeft {
+    display: none;
+  }
+
+  .expand {
+    display: block;
+  }
 }

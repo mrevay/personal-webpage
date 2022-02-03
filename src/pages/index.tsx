@@ -33,7 +33,8 @@ export default function Home() {
 
       <div className={styles.main}>
         <div className={styles.container}>
-          <h1 className={styles.title}> Hi, I&apos;m Max! </h1>
+          <h1 className={styles.title}> Hi, I&apos;m Max!</h1>
+          <div className={styles.expand}>EXPAND</div>
           <p>
             I&apos;m a research engineer and mathematician working in machine
             learning, control theory and numerical optimization. I&apos;ve just

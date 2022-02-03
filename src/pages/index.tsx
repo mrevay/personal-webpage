@@ -19,6 +19,21 @@ export default function Home() {
     );
   });
 
+  // return (
+  //   <div className={styles.container}>
+  //     <Head>
+  //       <title>Max Revay&apos;s Homepage</title>
+  //       <meta
+  //         name="Homepage"
+  //         content="A landing page containing various links to my online profiles."
+  //       />
+  //       <link rel="icon" href="/favicon.ico" />
+  //     </Head>
+  //     <Background />
+
+  //   </div>
+  // );
+
   return (
     <div className={styles.container}>
       <Head>
@@ -31,22 +46,8 @@ export default function Home() {
       </Head>
 
       <Background />
-      {/* <header className={styles.header}>
-        {
-          <>
-            <Image
-              priority
-              src={data.profile}
-              className={styles.borderCircle}
-              height={200}
-              width={200}
-              alt={`profile_picture`}
-            />
-          </>
-        }
-      </header> */}
-      <h1 className={styles.title}> Hi, I&apos;m Max! </h1>
 
+      <h1 className={styles.title}> Hi, I&apos;m Max! </h1>
       <div className={styles.description}>
         <p>
           I&apos;m a research engineer and mathematician working in machine
@@ -60,34 +61,18 @@ export default function Home() {
           <br />I am currently working as a research associate at the University
           of New South Wales on time series clustering.
         </p>
-        {/* <footer className={styles.footer}>{links}</footer> */}
-        <footer>
-          <Image
-            src="/images/scholar96.png"
-            width="64"
-            height="64"
-            alt="Google Scholar"
-          ></Image>
-          <Image
-            src="/images/github.png"
-            width="64"
-            height="64"
-            alt="GitHub"
-          ></Image>
-          <Image
-            src="/images/linked-in.png"
-            width="64"
-            height="64"
-            alt="Google Scholar"
-          ></Image>
-          <Image
-            src="/images/gmail.png"
-            width="64"
-            height="64"
-            alt="Google Scholar"
-          ></Image>
-        </footer>
+        <ul>
+          <li>Thesis</li>
+          <li>Publications</li>
+          <li>Linked-In</li>
+        </ul>
       </div>
+      <footer>
+        <ul>
+          <li>Press Q to increase alitude </li>
+          <li> Press A to decrease alitude.</li>
+        </ul>
+      </footer>
     </div>
   );
 }

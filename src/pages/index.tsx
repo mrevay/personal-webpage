@@ -49,6 +49,7 @@ export default function Home() {
 
       <h1 className={styles.title}> Hi, I&apos;m Max! </h1>
       <div className={styles.description}>
+        <h1 className={styles.title}> Hi, I&apos;m Max! </h1>
         <p>
           I&apos;m a research engineer and mathematician working in machine
           learning, control theory and numerical optimization. I&apos;ve just

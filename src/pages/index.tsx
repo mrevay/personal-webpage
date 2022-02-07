@@ -61,8 +61,7 @@ export default function Home() {
               </Link>
             </li>
           </ul>
-          I am currently looking for work. If you have an interesting project,
-          feel free to email me at maxrevay@gmail.com.
+          Email:maxrevay@gmail.com.
         </div>
       </div>
       <div className={styles.bottomLeft}>

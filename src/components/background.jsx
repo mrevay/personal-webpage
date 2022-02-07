@@ -51,6 +51,18 @@ export default function Background() {
         prop4 = scene.getObjectByName('prop4');
         floor = scene.getObjectByName('floor');
 
+        // Reskin the floor as a holodeck
+        const texture = new THREE.TextureLoader().load(
+          './model/textures/holodeck.png',
+        );
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(40, 40);
+
+        floor.material.map = texture;
+        console.log(floor);
+        // console.log(texture)
+
         // Turn on shadows
         drone.traverse((obj) => {
           if (obj.isMesh) obj.castShadow = true;
@@ -76,7 +88,6 @@ export default function Background() {
         light.shadow.camera.far = 400; // default
 
         floor.receiveShadow = true;
-
         console.log(drone);
 
         onWindowResize();

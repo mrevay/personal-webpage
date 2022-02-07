@@ -43,6 +43,10 @@ export default function Background() {
 
         camera = gltf.cameras[0];
         console.log(camera);
+        console.log({
+          matrixWorld: camera.matrixWorld,
+          projectionMatrix: camera.projectionMatrix,
+        });
 
         drone = scene.getObjectByName('drone');
         prop1 = scene.getObjectByName('prop1');
@@ -66,10 +70,7 @@ export default function Background() {
           if (obj.isMesh) obj.castShadow = true;
         });
 
-        // light = scene.getObjectByName('PointLight');
-        // light = new THREE.DirectionalLight(0xffffff, 5.0);
         light = scene.getObjectByName('DirectionalLight');
-        // light.intensity = 0.5;
         light.intensity = 0.9;
         light.target.position.set(0, -10, 0);
 
@@ -103,7 +104,6 @@ export default function Background() {
 
     var state = MathJS.matrix(MathJS.zeros(10, 1));
     state[3] = -20; // initial state
-    const base_prop_speed = 10;
     const prop_range = 0.1;
     const prop_gain = 50;
     var hover_height = 12;
@@ -142,7 +142,7 @@ export default function Background() {
 
       // let's make it work on mobile too
       document.addEventListener('touchstart', handleTouchStart, false);
-      document.addEventListener('touchend', handleTouchEnd, false);
+      // document.addEventListener('touchend', handleTouchEnd, false);
       document.addEventListener('touchmove', handleTouchMove, false);
     }
 
@@ -174,9 +174,6 @@ export default function Background() {
     }
 
     function handleMouseMove(event) {
-      // console.log(event);
-      // mousePos.x = event.clientX == null ? mousePos.x : event.clientX;
-      // mousePos.y = event.clientY == null ? mousePos.y : event.clientY;
       mousePos = { x: event.clientX, y: event.clientY };
     }
 
@@ -185,10 +182,6 @@ export default function Background() {
         event.preventDefault();
         mousePos = { x: event.touches[0].pageX, y: event.touches[0].pageY };
       }
-    }
-
-    function handleTouchEnd(event) {
-      mousePos = { x: windowHalfX, y: windowHalfY };
     }
 
     function handleTouchMove(event) {

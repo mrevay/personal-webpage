@@ -1,24 +1,11 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import Background from '@/components/background';
 import styles from '@/styles/Home.module.css';
-import data from '../../data.json';
-import { GitHub } from '@mui/icons-material';
 
 export default function Home() {
   // Pull out icons and construct links for footer
-  const links = data.links.map(({ alt, icon, link }) => {
-    const path = `https://unpkg.com/simple-icons@v6/icons/` + icon + `.svg`;
-    console.log(path);
-    return (
-      <a href={link} target="_blank" rel="noopener noreferrer" key={icon}>
-        <img height="64" width="64" src={path} alt={alt} />
-      </a>
-    );
-  });
-
   return (
     <div className={styles.body}>
       <Head>

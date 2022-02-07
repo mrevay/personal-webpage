@@ -19,9 +19,9 @@
   margin: 32px;
   width: 600px;
   padding: 20px;
-  background-color: #fc4a1a;
+  background-color: #24263ac2;
   border-radius: 15px;
-  box-shadow: 0 10px 20px #ff000040;
+  box-shadow: 0 10px 20px #00000000;
   position: relative;
 }
 
@@ -40,8 +40,8 @@
   padding: 10px 15px 10px 10px;
   border-radius: 15px;
   margin-top: 15px;
-  background-color: #fc4a1a;
-  box-shadow: 0 10px 20px #ff000040;
+  background-color: #24263ac2;
+  box-shadow: 0 10px 20px #000000;
 }
 
 .topRight {
@@ -54,8 +54,8 @@
 .infoButton {
   width: 60px;
   height: 60px;
-  background-color: #fc4a1a;
-  box-shadow: 0 10px 20px #ff000040;
+  background-color: #24263ac2;
+  box-shadow: 0 10px 20px #00000000;
   border: none;
   border-radius: 50%;
   font-size: 30px;
@@ -73,8 +73,8 @@
   right: 0;
   top: 82px;
   padding: 20px;
-  background: #fc4a1a;
-  box-shadow: 0 10px 20px #ff000040;
+  background: #24263ac2;
+  box-shadow: 0 10px 20px #00000000;
   width: 300px;
   opacity: 0;
   transform: translateY(10px); 

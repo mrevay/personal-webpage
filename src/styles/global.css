@@ -16,7 +16,7 @@ body {
 }
 
 a {
-  color: #f7B733;
+  color: #FAD02C;
   text-decoration: none;
 }
 
@@ -30,4 +30,10 @@ kbd {
   background: rgba(0,0,0,0.2);
   padding: 5px 10px;
 
+}
+
+ul {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
 }

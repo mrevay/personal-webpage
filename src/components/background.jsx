@@ -60,8 +60,6 @@ export default function Background() {
         texture.repeat.set(40, 40);
 
         floor.material.map = texture;
-        console.log(floor);
-        // console.log(texture)
 
         // Turn on shadows
         drone.traverse((obj) => {
@@ -71,7 +69,8 @@ export default function Background() {
         // light = scene.getObjectByName('PointLight');
         // light = new THREE.DirectionalLight(0xffffff, 5.0);
         light = scene.getObjectByName('DirectionalLight');
-        light.intensity = 0.5;
+        // light.intensity = 0.5;
+        light.intensity = 0.9;
         light.target.position.set(0, -10, 0);
 
         const shadow_width = 100;
@@ -89,6 +88,7 @@ export default function Background() {
 
         floor.receiveShadow = true;
         console.log(drone);
+        drone.scale.set(1.5, 1.5, 1.5);
 
         onWindowResize();
 
@@ -122,8 +122,8 @@ export default function Background() {
       //create the renderer
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(WIDTH, HEIGHT);
-      renderer.gammaInput = true;
-      renderer.gammaOutput = true;
+      // renderer.gammaInput = true;
+      // renderer.gammaOutput = true;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       canvasRef.current.appendChild(renderer.domElement);
@@ -148,9 +148,9 @@ export default function Background() {
 
     function onButtonPress(e) {
       if (e.key === 'q') {
-        hover_height += 1;
+        hover_height += 2;
       } else if (e.key === 'a') {
-        hover_height -= 1;
+        hover_height -= 2;
       }
       hover_height = hover_height > 0 ? hover_height : 0;
       hover_height =
@@ -235,20 +235,20 @@ export default function Background() {
       // gains calculated via separate Julia script
       const K = [
         [
-          1.118, 1.118, 2.2361, 1.3969, 1.3969, 0.5665, 0.5665, 0.8861, 0.0643,
-          0.0643,
+          0.866, 0.866, 2.2361, 1.801, 1.801, 0.5661, 0.5661, 0.8861, 0.0678,
+          0.0678,
         ],
         [
-          1.118, -1.118, 2.2361, 1.3969, -1.3969, 0.5665, -0.5665, 0.8861,
-          0.0643, -0.0643,
+          0.866, -0.866, 2.2361, 1.801, -1.801, 0.5661, -0.5661, 0.8861, 0.0678,
+          -0.0678,
         ],
         [
-          -1.118, -1.118, 2.2361, -1.3969, -1.3969, -0.5665, -0.5665, 0.8861,
-          -0.0643, -0.0643,
+          -0.866, -0.866, 2.2361, -1.801, -1.801, -0.5661, -0.5661, 0.8861,
+          -0.0678, -0.0678,
         ],
         [
-          -1.118, 1.118, 2.2361, -1.3969, 1.3969, -0.5665, 0.5665, 0.8861,
-          -0.0643, 0.0643,
+          -0.866, 0.866, 2.2361, -1.801, 1.801, -0.5661, 0.5661, 0.8861,
+          -0.0678, 0.0678,
         ],
       ];
 
@@ -261,8 +261,8 @@ export default function Background() {
     }
 
     function loop() {
-      var setpointx = ((mousePos.x - WIDTH / 2) * 100) / HEIGHT;
-      var setpointy = ((mousePos.y - HEIGHT / 2) * 100) / HEIGHT;
+      var setpointx = ((mousePos.x - WIDTH / 2) / 20000) * WIDTH;
+      var setpointy = ((mousePos.y - HEIGHT / 2) / 10000) * HEIGHT;
 
       var xstar = MathJS.matrix([
         [setpointx],
@@ -304,8 +304,8 @@ export default function Background() {
       drone.position.y = state.get([2, 0]);
       drone.position.z = state.get([1, 0]);
 
-      drone.rotation.x = (1 * state.get([4, 0]) * Math.PI) / 180;
-      drone.rotation.z = (0.5 * (-1 * state.get([5, 0]) * Math.PI)) / 180;
+      drone.rotation.x = (0.25 * state.get([4, 0]) * Math.PI) / 180;
+      drone.rotation.z = (0.25 * (-1 * state.get([5, 0]) * Math.PI)) / 180;
 
       renderer.render(scene, camera);
       requestAnimationFrame(loop);

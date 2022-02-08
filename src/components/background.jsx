@@ -30,6 +30,9 @@ export default function Background() {
 
     console.log('Loading Scene');
 
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
     // LOAD SCENE
     scene = new THREE.Scene();
 
@@ -108,8 +111,9 @@ export default function Background() {
     const prop_gain = 50;
     var hover_height = 12;
 
-    // MISC
-    var mousePos = { x: 0, y: 0 };
+    // Initial setpoint in case mouse is not on screen
+    mouse.x = 0;
+    mouse.y = 0;
 
     function init() {
       // To work with THREEJS, you need a scene, a camera, and a renderer
@@ -128,7 +132,7 @@ export default function Background() {
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       canvasRef.current.appendChild(renderer.domElement);
 
-      mousePos = { x: WIDTH / 2, y: HEIGHT / 2 };
+      // mousePos = { x: WIDTH / 2, y: HEIGHT / 2 };
 
       // Create a clock to help simulate
       clock = new THREE.Clock();
@@ -136,13 +140,11 @@ export default function Background() {
       // handling resize and mouse move events
       window.addEventListener('resize', onWindowResize, false);
       document.addEventListener('mousemove', handleMouseMove, false);
-      document.addEventListener('mousemove', handleMouseMove, false);
 
       document.addEventListener('keypress', onButtonPress, false);
 
       // let's make it work on mobile too
       document.addEventListener('touchstart', handleTouchStart, false);
-      // document.addEventListener('touchend', handleTouchEnd, false);
       document.addEventListener('touchmove', handleTouchMove, false);
     }
 
@@ -174,19 +176,22 @@ export default function Background() {
     }
 
     function handleMouseMove(event) {
-      mousePos = { x: event.clientX, y: event.clientY };
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
 
     function handleTouchStart(event) {
       if (event.touches.length > 1) {
         event.preventDefault();
-        mousePos = { x: event.touches[0].pageX, y: event.touches[0].pageY };
+        mouse.x = (event.touches.pageX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.touches.pageY / window.innerHeight) * 2 + 1;
       }
     }
 
     function handleTouchMove(event) {
       if (event.touches.length == 1) {
-        mousePos = { x: event.touches[0].pageX, y: event.touches[0].pageY };
+        mouse.x = (event.touches[0].pageX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.touches[0].pageY / window.innerHeight) * 2 + 1;
       }
     }
 
@@ -254,8 +259,11 @@ export default function Background() {
     }
 
     function loop() {
-      var setpointx = ((mousePos.x - WIDTH / 2) / 20000) * WIDTH;
-      var setpointy = ((mousePos.y - HEIGHT / 2) / 10000) * HEIGHT;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(scene.children);
+
+      var setpointx = intersects[0].point.x;
+      var setpointy = intersects[0].point.z;
 
       var xstar = MathJS.matrix([
         [setpointx],

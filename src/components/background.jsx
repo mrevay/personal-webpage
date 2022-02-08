@@ -50,6 +50,9 @@ export default function Background() {
           matrixWorld: camera.matrixWorld,
           projectionMatrix: camera.projectionMatrix,
         });
+        camera.rotation.x = -0.65;
+        camera.position.z = 50;
+        camera.position.y = 70;
 
         drone = scene.getObjectByName('drone');
         prop1 = scene.getObjectByName('prop1');
@@ -60,11 +63,11 @@ export default function Background() {
 
         // Reskin the floor as a holodeck
         const texture = new THREE.TextureLoader().load(
-          './model/textures/holodeck.png',
+          './model/textures/texture.png',
         );
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(40, 40);
+        texture.repeat.set(80, 80);
 
         floor.material.map = texture;
 
@@ -77,11 +80,12 @@ export default function Background() {
         light.intensity = 0.9;
         light.target.position.set(0, -10, 0);
 
-        const shadow_width = 100;
-        light.shadow.camera.top = shadow_width;
-        light.shadow.camera.bottom = -shadow_width;
-        light.shadow.camera.left = shadow_width;
-        light.shadow.camera.right = -shadow_width;
+        // setup orthoigraphic camera
+        // params for shadow casting
+        light.shadow.camera.top = 200;
+        light.shadow.camera.bottom = 0;
+        light.shadow.camera.left = -150;
+        light.shadow.camera.right = 100;
 
         light.castShadow = true;
         light.shadow.mapSize.height = 1028; // default
@@ -92,7 +96,7 @@ export default function Background() {
 
         floor.receiveShadow = true;
         console.log(drone);
-        drone.scale.set(1.5, 1.5, 1.5);
+        drone.scale.set(1.2, 1.2, 1.2);
 
         onWindowResize();
 

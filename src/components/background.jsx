@@ -126,13 +126,9 @@ export default function Background() {
       //create the renderer
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(WIDTH, HEIGHT);
-      // renderer.gammaInput = true;
-      // renderer.gammaOutput = true;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       canvasRef.current.appendChild(renderer.domElement);
-
-      // mousePos = { x: WIDTH / 2, y: HEIGHT / 2 };
 
       // Create a clock to help simulate
       clock = new THREE.Clock();

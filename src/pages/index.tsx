@@ -28,8 +28,9 @@ export default function Home() {
             finished my Ph.D, at the university of Sydney with Prof. Ian
             Manchester.
             <br />
-            <br />I am currently working as a research associate at the
-            University of New South Wales on time series clustering.
+            <br />I have also just finished a post-doc at the University of New
+            South Wales School of Electrical Engineering developing time series
+            clustering algorithms.
             <br></br>
             You might be interested in some of the following links:
           </p>
@@ -61,7 +62,10 @@ export default function Home() {
               </Link>
             </li>
           </ul>
-          Email:maxrevay@gmail.com.
+          Currently, I am looking for jobs in robotics, machine learning and,
+          software development. If you have an interesting project, please email
+          me at <a href="mailto: maxrevay@gmail.com">maxrevay@gmail.com.</a>
+          <br></br>
         </div>
       </div>
       <div className={styles.bottomLeft}>

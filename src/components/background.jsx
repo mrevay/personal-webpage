@@ -15,100 +15,18 @@ export default function Background() {
 
   useEffect(() => {
     //THREEJS RELATED VARIABLES
-    let scene,
-      camera,
-      fieldOfView,
-      aspectRatio,
-      prop1,
-      prop2,
-      prop3,
-      prop4,
-      renderer,
-      clock,
-      drone,
-      floor;
-
-    console.log('Loading Scene');
+    let camera, prop1, prop2, prop3, prop4, drone, floor;
 
     const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
-
-    // LOAD SCENE
-    scene = new THREE.Scene();
-
-    const loader = new GLTFLoader();
-    loader.load(
-      './model/scene (3).gltf',
-      (gltf) => {
-        // extract drone asset from scene
-        console.log('Loading full Scene', gltf);
-        scene.add(gltf.scene);
-
-        camera = gltf.cameras[0];
-        console.log(camera);
-        console.log({
-          matrixWorld: camera.matrixWorld,
-          projectionMatrix: camera.projectionMatrix,
-        });
-        camera.rotation.x = -0.65;
-        camera.position.z = 50;
-        camera.position.y = 70;
-
-        drone = scene.getObjectByName('drone');
-        prop1 = scene.getObjectByName('prop1');
-        prop2 = scene.getObjectByName('prop2');
-        prop3 = scene.getObjectByName('prop3');
-        prop4 = scene.getObjectByName('prop4');
-        floor = scene.getObjectByName('floor');
-
-        // Reskin the floor as a holodeck
-        const texture = new THREE.TextureLoader().load(
-          './model/textures/texture.png',
-        );
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(80, 80);
-
-        floor.material.map = texture;
-
-        // Turn on shadows
-        drone.traverse((obj) => {
-          if (obj.isMesh) obj.castShadow = true;
-        });
-
-        light = scene.getObjectByName('DirectionalLight');
-        light.intensity = 0.9;
-        light.target.position.set(0, -10, 0);
-
-        // setup orthoigraphic camera
-        // params for shadow casting
-        light.shadow.camera.top = 200;
-        light.shadow.camera.bottom = 0;
-        light.shadow.camera.left = -150;
-        light.shadow.camera.right = 100;
-
-        light.castShadow = true;
-        light.shadow.mapSize.height = 1028; // default
-        light.shadow.mapSize.width = 1028; // default
-        light.shadow.blurSamples = 20;
-        light.shadow.camera.near = 0.5; // default
-        light.shadow.camera.far = 400; // default
-
-        floor.receiveShadow = true;
-        console.log(drone);
-        drone.scale.set(1.2, 1.2, 1.2);
-
-        onWindowResize();
-
-        loop();
-      },
-      undefined,
-      (error) => console.error(error),
-    );
+    const setPoint = new THREE.Vector2();
+    const scene = new THREE.Scene();
+    const clock = new THREE.Clock();
+    const renderer = configureRenderer();
 
     //SCREEN VARIABLES
-    var HEIGHT, WIDTH, windowHalfX, windowHalfY, xLimit, yLimit;
+    var HEIGHT, WIDTH;
 
+    // Drone Variables
     var state = MathJS.matrix(MathJS.zeros(10, 1));
     state[3] = -20; // initial state
     const prop_range = 0.1;
@@ -116,34 +34,93 @@ export default function Background() {
     var hover_height = 12;
 
     // Initial setpoint in case mouse is not on screen
-    mouse.x = 0;
-    mouse.y = 0;
+    setPoint.x = 0;
+    setPoint.y = 0;
 
-    function init() {
-      // To work with THREEJS, you need a scene, a camera, and a renderer
+    // LOAD SCENE
+    const loader = new GLTFLoader();
+    loader.load(
+      './model/scene (4).gltf',
+      (gltf) => {
+        // extract drone asset from scene
+        scene.add(gltf.scene);
+        camera = gltf.cameras[0];
 
-      // create the camera
-      HEIGHT = window.innerHeight;
-      WIDTH = window.innerWidth;
-      aspectRatio = WIDTH / HEIGHT;
+        // extract assets from scene
+        drone = scene.getObjectByName('drone');
+        prop1 = scene.getObjectByName('prop1');
+        prop2 = scene.getObjectByName('prop2');
+        prop3 = scene.getObjectByName('prop3');
+        prop4 = scene.getObjectByName('prop4');
+        floor = scene.getObjectByName('floor');
 
-      //create the renderer
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        textureFloor();
+        configureLightSource();
+        configureShadows();
+        setWindowSize();
+
+        loop();
+      },
+      undefined,
+      (error) => console.error(error),
+    );
+
+    function configureShadows() {
+      drone.traverse((obj) => {
+        if (obj.isMesh) obj.castShadow = true;
+      });
+      drone.scale.set(1.2, 1.2, 1.2);
+      floor.receiveShadow = true;
+
+      light = scene.getObjectByName('DirectionalLight');
+      // params for shadow casting
+      light.shadow.camera.top = 200;
+      light.shadow.camera.bottom = -100;
+      light.shadow.camera.left = -150;
+      light.shadow.camera.right = 100;
+
+      light.castShadow = true;
+      light.shadow.mapSize.height = 1028; // default
+      light.shadow.mapSize.width = 1028; // default
+      light.shadow.blurSamples = 20;
+      light.shadow.camera.near = 0.5; // default
+      light.shadow.camera.far = 400; // default
+    }
+
+    function textureFloor() {
+      // Reskin the floor as a holodeck
+      const texture = new THREE.TextureLoader().load(
+        './model/textures/texture.png',
+      );
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(80, 80);
+      floor.material.map = texture;
+    }
+
+    function configureLightSource() {
+      light = scene.getObjectByName('DirectionalLight');
+      light.intensity = 0.9;
+      light.target.position.set(0, -10, 0);
+    }
+
+    function configureRenderer() {
+      const renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+      });
+
       renderer.setSize(WIDTH, HEIGHT);
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       canvasRef.current.appendChild(renderer.domElement);
+      return renderer;
+    }
 
-      // Create a clock to help simulate
-      clock = new THREE.Clock();
-
-      // handling resize and mouse move events
-      window.addEventListener('resize', onWindowResize, false);
+    function assignEventHandlers() {
+      window.addEventListener('resize', setWindowSize, false);
       document.addEventListener('mousemove', handleMouseMove, false);
-
       document.addEventListener('keypress', onButtonPress, false);
-
-      // let's make it work on mobile too
       document.addEventListener('touchstart', handleTouchStart, false);
       document.addEventListener('touchmove', handleTouchMove, false);
     }
@@ -161,37 +138,32 @@ export default function Background() {
           : 0.8 * camera.position.y;
     }
 
-    function onWindowResize() {
+    // updates global variables based on window parameters
+    function setWindowSize() {
       HEIGHT = window.innerHeight;
       WIDTH = window.innerWidth;
-      windowHalfX = WIDTH / 2;
-      windowHalfY = HEIGHT / 2;
       renderer.setSize(WIDTH, HEIGHT);
       camera.aspect = WIDTH / HEIGHT;
-      camera.updateProjectionMatrix(); // force the camera to update its aspect ratio
-      // recalculate the limits
-      var ang = ((fieldOfView / 2) * Math.PI) / 180;
-      yLimit = camera.position.z * Math.tan(ang);
-      xLimit = yLimit * camera.aspect;
+      camera.updateProjectionMatrix();
     }
 
     function handleMouseMove(event) {
-      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      setPoint.x = (event.clientX / window.innerWidth) * 2 - 1;
+      setPoint.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
 
     function handleTouchStart(event) {
       if (event.touches.length > 1) {
         event.preventDefault();
-        mouse.x = (event.touches.pageX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.touches.pageY / window.innerHeight) * 2 + 1;
+        setPoint.x = (event.touches.pageX / window.innerWidth) * 2 - 1;
+        setPoint.y = -(event.touches.pageY / window.innerHeight) * 2 + 1;
       }
     }
 
     function handleTouchMove(event) {
       if (event.touches.length == 1) {
-        mouse.x = (event.touches[0].pageX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.touches[0].pageY / window.innerHeight) * 2 + 1;
+        setPoint.x = (event.touches[0].pageX / window.innerWidth) * 2 - 1;
+        setPoint.y = -(event.touches[0].pageY / window.innerHeight) * 2 + 1;
       }
     }
 
@@ -259,11 +231,11 @@ export default function Background() {
     }
 
     function loop() {
-      raycaster.setFromCamera(mouse, camera);
+      raycaster.setFromCamera(setPoint, camera);
       const intersects = raycaster.intersectObjects(scene.children);
 
-      var setpointx = intersects[0].point.x;
-      var setpointy = intersects[0].point.z;
+      var setpointx = THREE.MathUtils.clamp(intersects[0].point.x, -200, 200);
+      var setpointy = THREE.MathUtils.clamp(intersects[0].point.z, -160, 200);
 
       var xstar = MathJS.matrix([
         [setpointx],
@@ -285,20 +257,16 @@ export default function Background() {
       const delta = clock.getDelta();
       state = euler_step(state, xdot, delta);
 
-      try {
-        // animate the propellers
-        var u1 = sigmoid(u.get([0, 0]) * prop_range) * prop_gain;
-        var u2 = sigmoid(u.get([1, 0]) * prop_range) * prop_gain;
-        var u3 = sigmoid(u.get([2, 0]) * prop_range) * prop_gain;
-        var u4 = sigmoid(u.get([3, 0]) * prop_range) * prop_gain;
+      // animate the propellers
+      var u1 = sigmoid(u.get([0, 0]) * prop_range) * prop_gain;
+      var u2 = sigmoid(u.get([1, 0]) * prop_range) * prop_gain;
+      var u3 = sigmoid(u.get([2, 0]) * prop_range) * prop_gain;
+      var u4 = sigmoid(u.get([3, 0]) * prop_range) * prop_gain;
 
-        prop1.rotation.z += delta * u1;
-        prop2.rotation.z += delta * u2;
-        prop3.rotation.z += delta * u3;
-        prop4.rotation.z += delta * u4;
-      } catch (error) {
-        console.log(error);
-      }
+      prop1.rotation.z += delta * u1;
+      prop2.rotation.z += delta * u2;
+      prop3.rotation.z += delta * u3;
+      prop4.rotation.z += delta * u4;
 
       // update animation
       drone.position.x = state.get([0, 0]);
@@ -312,7 +280,7 @@ export default function Background() {
       requestAnimationFrame(loop);
     }
 
-    init();
+    assignEventHandlers();
   }, []);
 
   return (

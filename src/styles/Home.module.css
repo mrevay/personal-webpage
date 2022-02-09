@@ -21,7 +21,7 @@
   padding: 20px;
   background-color: #24263ac2;
   border-radius: 15px;
-  box-shadow: 0 10px 20px #00000000;
+  box-shadow: 0 10px 20px #000000a6;
   position: relative;
 }
 
@@ -55,7 +55,7 @@
   width: 60px;
   height: 60px;
   background-color: #24263ac2;
-  box-shadow: 0 10px 20px #00000000;
+  box-shadow: 0 10px 20px #000000a8;
   border: none;
   border-radius: 50%;
   font-size: 30px;
@@ -74,7 +74,7 @@
   top: 82px;
   padding: 20px;
   background: #24263ac2;
-  box-shadow: 0 10px 20px #00000000;
+  box-shadow: 0 10px 20px #000000a8;
   width: 300px;
   opacity: 0;
   transform: translateY(10px); 

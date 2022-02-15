@@ -23,10 +23,10 @@ export default function Home() {
           <h1 className={styles.title}> Hi, I&apos;m Max!</h1>
           <div className={styles.expand}>EXPAND</div>
           <p>
-            I&apos;m a research engineer and mathematician working in machine
-            learning, control theory and numerical optimization. I&apos;ve just
-            finished my Ph.D, at the university of Sydney with Prof. Ian
-            Manchester.
+            Welcome to my webpage (best viewed on desktop). I&apos;m a research
+            engineer and mathematician working in machine learning, control
+            theory and numerical optimization. I&apos;ve just finished my Ph.D,
+            at the university of Sydney with Prof. Ian Manchester.
             <br />
             <br />I have also just finished a post-doc at the University of New
             South Wales School of Electrical Engineering developing time series
@@ -84,15 +84,7 @@ export default function Home() {
           control system for a quadcopter that I wrote to run in the browser.
           {` `}
           <br />
-          The drone uses an
-          <Link href="https://en.wikipedia.org/wiki/Linear%E2%80%93quadratic_regulator">
-            <a> LQR controller </a>
-          </Link>
-          and is rendered using{` `}
-          <Link href="https://threejs.org/">
-            <a> THREE.JS</a>
-          </Link>
-          .
+          The drone uses an LQR controller and is rendered using THREE.JS.
         </div>
       </div>
     </div>

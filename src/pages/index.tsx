@@ -62,8 +62,8 @@ export default function Home() {
               </Link>
             </li>
           </ul>
-          Currently, I am looking for jobs in robotics, machine learning and,
-          software development. If you have an interesting project, please email
+          Currently, I am working as a guidance and control engineer at Emesent - building one of the world's most advanced drone autonomy solutions.
+          I'm always interested in hearing about cool projects, so if you have one, please email
           me at <a href="mailto: maxrevay@gmail.com">maxrevay@gmail.com.</a>
           <br></br>
         </div>
